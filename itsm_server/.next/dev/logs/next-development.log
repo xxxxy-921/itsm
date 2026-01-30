@@ -1,0 +1,156 @@
+[00:00:01.544] Server  LOG      ✓ Ready in 1041ms
+[00:00:04.670] Server  LOG      ○ Compiling /service-catalog ...
+[00:00:12.514] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:13.275] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:13.275] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/service-catalog","route":"/service-catalog"}
+[00:00:13.275] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/service-catalog color: rgb(120, 120, 120) color: inherit {"dp":"/service-catalog","o":"http://localhost:3000/service-catalog","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769753743171}
+[00:00:13.497] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:13.497] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/service-catalog","route":"/service-catalog"}
+[00:00:13.497] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/service-catalog?id=dbd0a9b6-c50f-4bcd-91fd-03707752e189&vscodeBrowserReqId=1769743445187 color: rgb(120, 120, 120) color: inherit {"dp":"/service-catalog","o":"http://localhost:3000/service-catalog?id=dbd0a9b6-c50f-4bcd-91fd-03707752e189&vscodeBrowserReqId=1769743445187","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769753743388}
+[00:00:18.018] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:00:18.019] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/service-catalog","route":"/service-catalog"}
+[00:00:18.019] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/service-catalog?id=dbd0a9b6-c50f-4bcd-91fd-03707752e189&vscodeBrowserReqId=1769753747318 color: rgb(120, 120, 120) color: inherit {"dp":"/service-catalog","o":"http://localhost:3000/service-catalog?id=dbd0a9b6-c50f-4bcd-91fd-03707752e189&vscodeBrowserReqId=1769753747318","r":"","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769753747913}
+[00:01:03.395] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:01:03.395] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:04:46.936] Server  LOG      ✓ Compiled in 195ms
+[00:04:47.116] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:04:47.116] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:05:18.341] Server  LOG      ✓ Compiled in 302ms
+[00:05:42.068] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:05:42.068] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:08:32.040] Server  LOG      ✓ Compiled in 157ms
+[00:14:34.737] Server  LOG      ✓ Compiled in 240ms
+[00:16:48.628] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:16:48.628] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:16:50.791] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:16:50.791] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:24:43.284] Server  LOG      ✓ Compiled in 185ms
+[00:24:51.368] Server  LOG      ✓ Compiled in 151ms
+[00:24:51.480] Browser ERROR   ./components/service-catalog/create-service-drawer.tsx:809:33
+Parsing ecmascript source code failed
+  807 |                               <span>已完成识别</span>
+  808 |                             </>
+> 809 |                           ) : (\n                            <>\n                              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+      |                                 ^
+  810 |                               <span>AI 智能识别与生成</span>
+  811 |                             </>
+  812 |                           )}
+
+Expected '</', got 'n'
+
+Import traces:
+  Client Component Browser:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component Browser]
+    ./components/service-catalog/service-list.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component SSR]
+    ./components/service-catalog/service-list.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Server Component]
+[00:24:51.480] Browser ERROR   ./components/service-catalog/create-service-drawer.tsx:809:33
+Parsing ecmascript source code failed
+  807 |                               <span>已完成识别</span>
+  808 |                             </>
+> 809 |                           ) : (\n                            <>\n                              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+      |                                 ^
+  810 |                               <span>AI 智能识别与生成</span>
+  811 |                             </>
+  812 |                           )}
+
+Expected '</', got 'n'
+
+Import traces:
+  Client Component Browser:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component Browser]
+    ./components/service-catalog/service-list.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component SSR]
+    ./components/service-catalog/service-list.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Server Component]
+[00:24:55.711] Browser ERROR   ./components/service-catalog/create-service-drawer.tsx:809:33
+Parsing ecmascript source code failed
+  807 |                               <span>已完成识别</span>
+  808 |                             </>
+> 809 |                           ) : (\n                            <>\n                              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+      |                                 ^
+  810 |                               <span>AI 智能识别与生成</span>
+  811 |                             </>
+  812 |                           )}
+
+Expected '</', got 'n'
+
+Import traces:
+  Client Component Browser:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component Browser]
+    ./components/service-catalog/service-list.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component SSR]
+    ./components/service-catalog/service-list.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Server Component]
+[00:24:55.711] Browser ERROR   ./components/service-catalog/create-service-drawer.tsx:809:33
+Parsing ecmascript source code failed
+  807 |                               <span>已完成识别</span>
+  808 |                             </>
+> 809 |                           ) : (\n                            <>\n                              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+      |                                 ^
+  810 |                               <span>AI 智能识别与生成</span>
+  811 |                             </>
+  812 |                           )}
+
+Expected '</', got 'n'
+
+Import traces:
+  Client Component Browser:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component Browser]
+    ./components/service-catalog/service-list.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Client Component Browser]
+    ./app/service-catalog/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./components/service-catalog/create-service-drawer.tsx [Client Component SSR]
+    ./components/service-catalog/service-list.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Client Component SSR]
+    ./app/service-catalog/page.tsx [Server Component]
+[00:25:45.071] Server  LOG      ✓ Compiled in 164ms
+[00:25:54.153] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:25:54.153] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:29:53.836] Server  LOG      ✓ Compiled in 167ms
+[00:33:19.912] Server  LOG      ✓ Compiled in 160ms
+[00:35:31.079] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:35:31.371] Browser LOG     %c[Vercel Web Analytics]%c Debug mode is enabled by default in development. No requests will be sent to the server. color: rgb(120, 120, 120) color: inherit
+[00:35:31.371] Browser LOG     %c[Vercel Web Analytics]%c Running queued event color: rgb(120, 120, 120) color: inherit pageview {"path":"/service-catalog","route":"/service-catalog"}
+[00:35:31.371] Browser LOG     %c[Vercel Web Analytics]%c [pageview] http://localhost:3000/service-catalog color: rgb(120, 120, 120) color: inherit {"dp":"/service-catalog","o":"http://localhost:3000/service-catalog","sdkn":"@vercel/analytics/next","sdkv":"1.3.1","sv":"0.1.3","ts":1769755861259}
+[00:35:33.742] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:35:33.742] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:39:06.859] Server  LOG      ✓ Compiled in 141ms
+[00:40:08.698] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:40:08.698] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:41:39.910] Server  LOG      ✓ Compiled in 139ms
+[00:46:12.006] Server  LOG      ✓ Compiled in 168ms
+[00:46:12.222] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:46:12.222] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:48:19.580] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:48:19.580] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:48:47.789] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:48:47.789] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:49:00.651] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:49:00.651] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:49:20.269] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:49:20.270] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:49:39.522] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:49:39.522] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:51:14.270] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[00:51:14.270] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[01:06:29.014] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+[01:06:29.014] Browser WARN    Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
