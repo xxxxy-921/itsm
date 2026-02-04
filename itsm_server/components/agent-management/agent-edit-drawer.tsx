@@ -270,42 +270,9 @@ export function AgentEditDrawer({
                 <label className="text-sm font-medium text-gray-700">
                   主模型 <span className="text-red-500">*</span>
                 </label>
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setModelDropdownOpen(!modelDropdownOpen)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-white hover:border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Brain className="w-4 h-4 text-violet-500" />
-                      <span className="text-gray-900">{selectedModel?.name || "选择模型"}</span>
-                    </div>
-                    <ChevronDown className={cn(
-                      "w-4 h-4 text-gray-400 transition-transform",
-                      modelDropdownOpen && "rotate-180"
-                    )} />
-                  </button>
-                  {modelDropdownOpen && (
-                    <div className="absolute z-10 top-full mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
-                      {AVAILABLE_MODELS.map((model) => (
-                        <button
-                          key={model.id}
-                          type="button"
-                          onClick={() => {
-                            setFormData({ ...formData, model: model.id })
-                            setModelDropdownOpen(false)
-                          }}
-                          className={cn(
-                            "w-full px-4 py-3 text-left hover:bg-violet-50 transition-all",
-                            formData.model === model.id && "bg-violet-50"
-                          )}
-                        >
-                          <p className="text-sm font-medium text-gray-900">{model.name}</p>
-                          <p className="text-xs text-gray-500">{model.description}</p>
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                <div className="w-full flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 cursor-not-allowed">
+                  <Brain className="w-4 h-4 text-violet-500" />
+                  <span className="text-gray-600">{selectedModel?.name || "未配置"}</span>
                 </div>
               </div>
 
@@ -340,38 +307,8 @@ export function AgentEditDrawer({
                   <Settings2 className="w-4 h-4 text-gray-500" />
                   Skill Selection Model
                 </label>
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setSkillModelDropdownOpen(!skillModelDropdownOpen)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-white hover:border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                  >
-                    <span className="text-gray-900">{selectedSkillModel?.name || "选择模型"}</span>
-                    <ChevronDown className={cn(
-                      "w-4 h-4 text-gray-400 transition-transform",
-                      skillModelDropdownOpen && "rotate-180"
-                    )} />
-                  </button>
-                  {skillModelDropdownOpen && (
-                    <div className="absolute z-10 top-full mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden max-h-48 overflow-y-auto">
-                      {AVAILABLE_MODELS.map((model) => (
-                        <button
-                          key={model.id}
-                          type="button"
-                          onClick={() => {
-                            setFormData({ ...formData, skill_selection_model: model.id })
-                            setSkillModelDropdownOpen(false)
-                          }}
-                          className={cn(
-                            "w-full px-4 py-2.5 text-left text-sm hover:bg-violet-50 transition-all",
-                            formData.skill_selection_model === model.id && "bg-violet-50"
-                          )}
-                        >
-                          {model.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                <div className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 cursor-not-allowed">
+                  <span className="text-gray-600">{selectedSkillModel?.name || "未配置"}</span>
                 </div>
                 <p className="text-xs text-gray-500">用于选择和调用 Skills 的模型</p>
               </div>
@@ -382,38 +319,8 @@ export function AgentEditDrawer({
                   <Type className="w-4 h-4 text-gray-500" />
                   Title Generation Model
                 </label>
-                <div className="relative">
-                  <button
-                    type="button"
-                    onClick={() => setTitleModelDropdownOpen(!titleModelDropdownOpen)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-white hover:border-violet-300 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all"
-                  >
-                    <span className="text-gray-900">{selectedTitleModel?.name || "选择模型"}</span>
-                    <ChevronDown className={cn(
-                      "w-4 h-4 text-gray-400 transition-transform",
-                      titleModelDropdownOpen && "rotate-180"
-                    )} />
-                  </button>
-                  {titleModelDropdownOpen && (
-                    <div className="absolute z-10 top-full mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden max-h-48 overflow-y-auto">
-                      {AVAILABLE_MODELS.map((model) => (
-                        <button
-                          key={model.id}
-                          type="button"
-                          onClick={() => {
-                            setFormData({ ...formData, title_generation_model: model.id })
-                            setTitleModelDropdownOpen(false)
-                          }}
-                          className={cn(
-                            "w-full px-4 py-2.5 text-left text-sm hover:bg-violet-50 transition-all",
-                            formData.title_generation_model === model.id && "bg-violet-50"
-                          )}
-                        >
-                          {model.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
+                <div className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-gray-50 cursor-not-allowed">
+                  <span className="text-gray-600">{selectedTitleModel?.name || "未配置"}</span>
                 </div>
                 <p className="text-xs text-gray-500">用于自动生成对话标题的模型</p>
               </div>

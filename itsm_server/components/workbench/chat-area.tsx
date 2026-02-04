@@ -8,26 +8,18 @@ import {
   Eye,
   EyeOff,
   Paperclip,
-  Mic,
-  ChevronDown,
   Plus,
-  FolderOpen,
   MessageCircle,
-  Check,
-  Settings,
   ChevronLeft,
-  X,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { format } from "date-fns"
-import { zhCN } from "date-fns/locale"
 
 const agents = [
-  { id: 1, name: "BKLite ITSM 助手", version: "v1.2.4", active: true },
-  { id: 2, name: "运维专家", version: "v1.0", active: true },
-  { id: 3, name: "知识库助手", version: "v2.1", active: false },
+  { id: 1, name: "BKLite ITSM 助手", version: "v1.2.4", active: true, description: "专注于 IT 服务管理的智能助手，可处理工单、服务请求等场景" },
+  { id: 2, name: "运维专家", version: "v1.0", active: true, description: "专业的运维技术支持助手，擅长监控告警、故障排查" },
+  { id: 3, name: "知识库助手", version: "v2.1", active: false, description: "智能知识检索与文档管理助手，支持多格式文档处理" },
 ]
 
 type Message = {
@@ -82,7 +74,6 @@ const mockHistories: ChatHistory[] = [
 
 export function ChatArea() {
   const [selectedAgent, setSelectedAgent] = useState(agents[0])
-  const [agentDrawerOpen, setAgentDrawerOpen] = useState(false)
   const [message, setMessage] = useState("")
   const [showReasoning, setShowReasoning] = useState(false)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
@@ -177,124 +168,83 @@ export function ChatArea() {
       <div className="flex-1 h-screen flex flex-col bg-white">
         {/* Header with Agent Selector */}
         <header className="h-14 px-6 flex items-center justify-between border-b border-gray-100 bg-white">
-          <div className="flex items-center gap-4">
-            <h1 className="text-base font-medium text-foreground">对话</h1>
-            
-            {/* Agent Selector Popover */}
-            <Popover open={agentDrawerOpen} onOpenChange={setAgentDrawerOpen}>
-              <PopoverTrigger asChild>
-                <button
-                  type="button"
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:shadow-lg hover:shadow-indigo-500/20 transition-all duration-200"
+          <div className="flex items-center gap-2">
+            {/* Horizontal Agent Selector - 横向排布的智能体切换 */}
+            {agents.filter(a => a.active).map((agent) => (
+              <Tooltip key={agent.id}>
+                <TooltipTrigger asChild>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedAgent(agent)}
+                    className={cn(
+                      "relative flex items-center gap-2.5 px-3 py-2 rounded-xl transition-all duration-300 ease-out",
+                      selectedAgent.id === agent.id
+                        ? "bg-gradient-to-r from-indigo-500 to-violet-500 shadow-lg shadow-indigo-500/25 scale-[1.02]"
+                        : "bg-gray-50 hover:bg-gray-100 border border-gray-200 hover:border-gray-300"
+                    )}
+                  >
+                    {/* Avatar with glow effect */}
+                    <div className={cn(
+                      "relative w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-300",
+                      selectedAgent.id === agent.id 
+                        ? "bg-white/25 shadow-inner" 
+                        : "bg-gray-200"
+                    )}>
+                      {/* Glow ring for selected */}
+                      {selectedAgent.id === agent.id && (
+                        <div className="absolute inset-0 rounded-lg bg-white/20 animate-pulse" />
+                      )}
+                      <Bot className={cn(
+                        "w-4 h-4 transition-all duration-300",
+                        selectedAgent.id === agent.id 
+                          ? "text-white drop-shadow-sm" 
+                          : "text-gray-400"
+                      )} />
+                    </div>
+                    <span className={cn(
+                      "text-sm font-medium transition-all duration-300",
+                      selectedAgent.id === agent.id 
+                        ? "text-white" 
+                        : "text-gray-500"
+                    )}>
+                      {agent.name}
+                    </span>
+                    {/* Active indicator dot */}
+                    {selectedAgent.id === agent.id && (
+                      <div className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-green-400 border-2 border-white shadow-sm animate-in zoom-in duration-200" />
+                    )}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent 
+                  side="bottom" 
+                  className="max-w-[280px] p-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-slate-700/50 shadow-2xl shadow-black/30 overflow-hidden"
+                  sideOffset={8}
                 >
-                  <div className="w-6 h-6 rounded-md bg-white/20 flex items-center justify-center">
-                    <Bot className="w-4 h-4 text-white" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium">{selectedAgent.name}</span>
-                    <span className="text-xs text-white/70">{selectedAgent.version}</span>
-                  </div>
-                  <ChevronDown className={cn(
-                    "w-4 h-4 text-white/70 transition-transform duration-200",
-                    agentDrawerOpen && "rotate-180"
-                  )} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent 
-                align="start" 
-                side="bottom"
-                className="w-[380px] p-0 mt-2 animate-in slide-in-from-top-2 duration-300"
-              >
-                <div className="flex flex-col max-h-[500px]">
-                  {/* Header */}
-                  <div className="px-4 py-3 border-b border-gray-100">
-                    <h3 className="text-sm font-semibold text-gray-900">选择智能体</h3>
-                    <p className="text-xs text-gray-500 mt-0.5">切换到不同的智能体来开始对话</p>
-                  </div>
-
-                  {/* Agent List */}
-                  <div className="overflow-y-auto p-3 space-y-2">
-                    {agents.map((agent) => (
-                      <button
-                        key={agent.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedAgent(agent)
-                          setAgentDrawerOpen(false)
-                        }}
-                        className={cn(
-                          "w-full flex items-center gap-3 p-3 rounded-lg transition-all duration-200",
-                          selectedAgent.id === agent.id
-                            ? "bg-gradient-to-r from-indigo-50 to-violet-50 border border-indigo-200 shadow-sm"
-                            : "bg-white border border-gray-100 hover:border-indigo-100 hover:shadow-sm"
-                        )}
-                      >
-                        <div className={cn(
-                          "w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0",
-                          selectedAgent.id === agent.id
-                            ? "bg-gradient-to-br from-indigo-500 to-violet-500 shadow-md shadow-indigo-500/20"
-                            : "bg-gray-100"
-                        )}>
-                          <Bot className={cn(
-                            "w-5 h-5",
-                            selectedAgent.id === agent.id ? "text-white" : "text-gray-500"
-                          )} />
+                  <div className="p-4 space-y-3">
+                    {/* Header with gradient */}
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center shadow-lg shadow-indigo-500/25">
+                          <Bot className="w-4 h-4 text-white" />
                         </div>
-                        <div className="flex-1 text-left">
-                          <div className="flex items-center gap-2">
-                            <p className={cn(
-                              "text-sm font-semibold",
-                              selectedAgent.id === agent.id ? "text-indigo-700" : "text-gray-900"
-                            )}>
-                              {agent.name}
-                            </p>
-                            {selectedAgent.id === agent.id && (
-                              <Check className="w-4 h-4 text-indigo-600" />
-                            )}
-                          </div>
-                          <p className="text-xs text-gray-500">{agent.version}</p>
-                        </div>
-                        <div>
-                          <span className={cn(
-                            "px-2 py-0.5 rounded-md text-xs font-medium",
-                            agent.active 
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-600"
-                          )}>
-                            {agent.active ? "运行中" : "已停用"}
-                          </span>
-                        </div>
-                      </button>
-                    ))}
+                        <p className="font-semibold text-white">{agent.name}</p>
+                      </div>
+                      <span className="text-xs font-medium text-indigo-300 bg-indigo-500/20 px-2 py-1 rounded-md border border-indigo-400/30">
+                        {agent.version}
+                      </span>
+                    </div>
+                    {/* Description */}
+                    <p className="text-xs text-slate-300 leading-relaxed">
+                      {agent.description}
+                    </p>
                   </div>
-
-                  {/* Footer */}
-                  <div className="p-3 border-t border-gray-100 bg-gray-50">
-                    <button
-                      type="button"
-                      className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-indigo-200 text-indigo-600 text-sm font-medium hover:bg-indigo-50 transition-all"
-                    >
-                      <Settings className="w-4 h-4" />
-                      管理智能体
-                    </button>
-                  </div>
-                </div>
-              </PopoverContent>
-            </Popover>
+                  {/* Bottom accent line */}
+                  <div className="h-1 bg-gradient-to-r from-indigo-500 via-violet-500 to-purple-500" />
+                </TooltipContent>
+              </Tooltip>
+            ))}
           </div>
           
-          <button
-            type="button"
-            onClick={() => setShowReasoning(!showReasoning)}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm text-muted-foreground hover:text-foreground hover:bg-gray-50 transition-all"
-          >
-            显示推理追踪
-            {showReasoning ? (
-              <Eye className="w-4 h-4" />
-            ) : (
-              <EyeOff className="w-4 h-4" />
-            )}
-          </button>
         </header>
 
         {/* Main Chat Area with Grid Pattern */}
