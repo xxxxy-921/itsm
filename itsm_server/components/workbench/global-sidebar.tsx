@@ -25,6 +25,18 @@ import { cn } from "@/lib/utils"
 const menuItems = [
   { icon: Home, label: "工作台", labelEn: "Workspace", href: "/", id: "workspace" },
   { 
+    icon: Bot, 
+    label: "智能体配置", 
+    labelEn: "Agent Config", 
+    href: "#", 
+    id: "agent-config",
+    hasSubmenu: true,
+    submenu: [
+      { label: "智能体管理", href: "/agent-management", id: "agent-management" },
+      { label: "MCP管理", href: "/mcp-management", id: "mcp-management" },
+    ]
+  },
+  { 
     icon: Wrench, 
     label: "ITSM", 
     labelEn: "ITSM", 
