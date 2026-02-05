@@ -18,127 +18,35 @@ import {
 import { cn } from "@/lib/utils"
 import { McpConfigDrawer } from "./mcp-config-drawer"
 
-// MCP 数据类型
+// MCP 数据类型 - 对齐后端字段
 export interface Mcp {
   id: string
-  name: string
-  description: string
-  version: string
-  type: "system" | "custom"
-  enabled: boolean
-  provider: string
-  endpoint?: string
-  category: "database" | "api" | "messaging" | "file" | "git" | "other"
-  createdAt: string
-  updatedAt: string
-  config?: Record<string, any>
+  name: string                    // 后端: name
+  description: string              // 后端需补充
+  url: string                      // 后端: url
+  beartoken: string               // 后端: beartoken
+  enabled: boolean                // 后端需补充
+  tenant_id?: string              // 后端: tenant_id
+  created_at?: string             // 后端需补充
+  updated_at?: string             // 后端需补充
 }
 
-// Mock 系统级 MCP 数据
-const mockSystemMcps: Mcp[] = [
+// 预置一个MCP卡片示例
+const initialMcps: Mcp[] = [
   {
     id: "1",
-    name: "MySQL 数据库连接器",
+    name: "数据库连接器",
     description: "提供 MySQL 数据库的查询、管理和监控能力",
-    version: "v2.1.0",
-    type: "system",
+    url: "https://api.example.com/mcp/database",
+    beartoken: "Bearer_token_example_12345",
     enabled: true,
-    provider: "BKLite",
-    category: "database",
-    createdAt: "2026-01-10",
-    updatedAt: "2026-02-01",
-    config: {
-      host: "localhost",
-      port: 3306,
-      database: "itsm_db"
-    }
-  },
-  {
-    id: "2",
-    name: "PostgreSQL 连接器",
-    description: "PostgreSQL 数据库集成，支持高级查询和事务管理",
-    version: "v1.8.3",
-    type: "system",
-    enabled: true,
-    provider: "BKLite",
-    category: "database",
-    createdAt: "2026-01-12",
-    updatedAt: "2026-01-30",
-  },
-  {
-    id: "3",
-    name: "REST API 调用器",
-    description: "通用的 REST API 调用工具，支持多种认证方式",
-    version: "v3.0.1",
-    type: "system",
-    enabled: true,
-    provider: "BKLite",
-    category: "api",
-    createdAt: "2026-01-08",
-    updatedAt: "2026-01-28",
-  },
-  {
-    id: "4",
-    name: "Slack 消息集成",
-    description: "Slack 消息发送和通知集成工具",
-    version: "v1.5.2",
-    type: "system",
-    enabled: false,
-    provider: "Slack",
-    category: "messaging",
-    createdAt: "2026-01-15",
-    updatedAt: "2026-01-25",
-  },
-  {
-    id: "5",
-    name: "企业微信集成",
-    description: "企业微信消息推送和机器人集成",
-    version: "v2.3.0",
-    type: "system",
-    enabled: true,
-    provider: "WeChat Work",
-    category: "messaging",
-    createdAt: "2026-01-18",
-    updatedAt: "2026-02-02",
-  },
-  {
-    id: "6",
-    name: "文件系统访问",
-    description: "安全的文件系统读写和管理工具",
-    version: "v1.0.5",
-    type: "system",
-    enabled: true,
-    provider: "BKLite",
-    category: "file",
-    createdAt: "2026-01-20",
-    updatedAt: "2026-01-29",
-  },
-  {
-    id: "7",
-    name: "Git 仓库集成",
-    description: "Git 仓库操作和代码管理工具",
-    version: "v2.0.0",
-    type: "system",
-    enabled: false,
-    provider: "BKLite",
-    category: "git",
-    createdAt: "2026-01-22",
-    updatedAt: "2026-01-31",
-  },
+    created_at: "2026-02-01T10:00:00Z",
+    updated_at: "2026-02-05T14:30:00Z",
+  }
 ]
 
-// 图标映射
-const categoryIcons = {
-  database: Database,
-  api: ExternalLink,
-  messaging: MessageSquare,
-  file: FileText,
-  git: GitBranch,
-  other: Settings,
-}
-
 export function McpManagement() {
-  const [mcps, setMcps] = useState<Mcp[]>(mockSystemMcps)
+  const [mcps, setMcps] = useState<Mcp[]>(initialMcps)
   const [searchQuery, setSearchQuery] = useState("")
   const [editingMcp, setEditingMcp] = useState<Mcp | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
@@ -147,8 +55,7 @@ export function McpManagement() {
   const filteredMcps = mcps.filter(mcp => {
     const matchesSearch = 
       mcp.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mcp.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      mcp.provider.toLowerCase().includes(searchQuery.toLowerCase())
+      mcp.description.toLowerCase().includes(searchQuery.toLowerCase())
 
     return matchesSearch
   })
@@ -167,9 +74,19 @@ export function McpManagement() {
 
   const handleSave = (updatedMcp: Mcp) => {
     if (isCreating) {
-      setMcps([...mcps, { ...updatedMcp, id: String(mcps.length + 1), type: "system" }])
+      const newMcp = {
+        ...updatedMcp,
+        id: String(Date.now()),
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+      setMcps([...mcps, newMcp])
     } else {
-      setMcps(mcps.map(m => m.id === updatedMcp.id ? updatedMcp : m))
+      setMcps(mcps.map(m => 
+        m.id === updatedMcp.id 
+          ? { ...updatedMcp, updated_at: new Date().toISOString() } 
+          : m
+      ))
     }
     setDrawerOpen(false)
   }
@@ -255,8 +172,6 @@ export function McpManagement() {
       <div className="flex-1 overflow-y-auto p-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredMcps.map((mcp) => {
-            const CategoryIcon = categoryIcons[mcp.category]
-            
             return (
               <div
                 key={mcp.id}
@@ -289,7 +204,7 @@ export function McpManagement() {
 
                 {/* Icon */}
                 <div className="mt-4 mb-4 w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-cyan-100 flex items-center justify-center">
-                  <CategoryIcon className="w-6 h-6 text-blue-600" />
+                  <Plug className="w-6 h-6 text-blue-600" />
                 </div>
 
                 {/* Info */}
@@ -302,14 +217,12 @@ export function McpManagement() {
                   </p>
                 </div>
 
-                {/* Meta */}
-                <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+                {/* Meta - 显示 URL */}
+                <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs text-gray-400">{mcp.provider}</span>
+                    <ExternalLink className="w-3.5 h-3.5 text-gray-400" />
+                    <span className="text-xs text-gray-500 truncate">{mcp.url}</span>
                   </div>
-                  <span className="text-xs font-medium text-gray-500">
-                    {mcp.version}
-                  </span>
                 </div>
 
                 {/* Hover Effect */}

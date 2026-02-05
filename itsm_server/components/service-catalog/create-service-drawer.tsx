@@ -103,6 +103,7 @@ const categories = [
   { id: "access", label: "账号与权限管理" },
   { id: "network", label: "网络" },
   { id: "email", label: "邮箱系统" },
+  { id: "server", label: "服务器服务" },
 ]
 
 // 示例 JSON 配置数据
@@ -158,6 +159,467 @@ const EXAMPLE_CONFIG_JSON: ServiceConfigJSON = {
     duration: "30",
     manager_comment: "",
     it_note: ""
+  }
+}
+
+// 邮箱创建申请服务的预置配置
+const EMAIL_ACCOUNT_CREATION_CONFIG: ServiceConfigJSON = {
+  script: `### 邮箱创建申请服务协作规范
+
+#### 服务概述
+本服务用于员工申请创建企业邮箱账号，支持新员工入职、部门调整等场景的邮箱开通需求。
+
+#### 流程说明
+
+**1. 提单阶段（申请人）**
+- 申请人填写个人基本信息：姓名、工号、部门、联系方式
+- 选择邮箱类型：标准邮箱（5GB）或高级邮箱（20GB）
+- 填写期望的邮箱前缀（系统自动补全 @company.com）
+- 说明申请原因，如：新员工入职、原邮箱容量不足等
+- 系统自动记录提单时间和申请人信息
+
+**2. 部门经理审批（一级审批）**
+- 审批人：申请人的直属部门经理
+- 审批内容：核实申请人身份、确认邮箱需求的合理性
+- 审批结果：同意或驳回
+- 若驳回，需填写驳回原因，流程结束
+- 若同意，流程自动流转至 IT 部门
+
+**3. IT 部门处理（二级审批 + 执行）**
+- 审批人：IT 运维团队负责人
+- 审批内容：评估邮箱资源、确认配置可行性
+- 审批通过后，由 IT 工程师执行邮箱创建操作
+- 填写处理记录：
+  - 实际创建的邮箱地址
+  - 初始密码（系统生成或手动设置）
+  - 邮箱服务器信息
+  - 完成时间
+- 可选择挂载 MCP 工具自动调用邮件服务器 API 创建账号
+
+**4. 结单阶段**
+- IT 完成处理后，系统自动发送邮件通知申请人
+- 邮件内容包含：邮箱地址、初始密码、登录指引
+- 工单状态变更为"已完成"
+- 申请人可在工单中查看完整的处理记录
+
+#### SLA 时限
+- 标准响应时间：**4 小时**
+- 从提单到完成的总时长不超过 1 个工作日
+
+#### 异常处理
+- 若申请人信息不完整，系统自动退回补充
+- 若邮箱前缀重复，IT 需与申请人沟通调整
+- 若邮箱服务器故障，IT 可暂停工单并备注原因
+
+#### 知识库关联
+- 《企业邮箱使用规范》
+- 《邮箱容量升级指南》
+- 《邮件客户端配置教程》`,
+  sla_tier: "4h",
+  nodes: [
+    { id: "start", label: "提单", type: "start" },
+    { id: "manager_approval", label: "部门经理审批", type: "approval" },
+    { id: "it_approval", label: "IT审批", type: "approval" },
+    { id: "it_processing", label: "IT处理", type: "processing" },
+    { id: "completed", label: "完成", type: "end" }
+  ],
+  fields: [
+    {
+      key: "applicant_name",
+      label: "申请人姓名",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "employee_id",
+      label: "工号",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "department",
+      label: "所属部门",
+      type: "select",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "contact_phone",
+      label: "联系电话",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "email_type",
+      label: "邮箱类型",
+      type: "select",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "email_prefix",
+      label: "期望邮箱前缀",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "apply_reason",
+      label: "申请原因",
+      type: "textarea",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "manager_approval_comment",
+      label: "经理审批意见",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "write",
+        "it_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "it_approval_comment",
+      label: "IT审批意见",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "it_approval": "write",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "actual_email_address",
+      label: "实际创建的邮箱地址",
+      type: "text",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "it_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    },
+    {
+      key: "initial_password",
+      label: "初始密码",
+      type: "text",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "it_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    },
+    {
+      key: "server_info",
+      label: "邮箱服务器信息",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "it_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    },
+    {
+      key: "processing_notes",
+      label: "处理记录",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "it_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    }
+  ],
+  mock_data: {
+    applicant_name: "张三",
+    employee_id: "E20260001",
+    department: "产品部",
+    contact_phone: "13800138000",
+    email_type: "标准邮箱（5GB）",
+    email_prefix: "zhangsan",
+    apply_reason: "新员工入职，需要开通企业邮箱用于日常工作沟通"
+  }
+}
+
+// 堡垒机资源申请服务的预置配置
+const BASTION_HOST_CONFIG: ServiceConfigJSON = {
+  script: `### 堡垒机资源申请服务协作规范
+
+#### 服务概述
+本服务用于员工或项目组申请访问企业堡垒机资源，适用于生产环境运维、临时授权等场景。
+
+#### 流程说明
+
+**1. 提单阶段（申请人）**
+- 申请人填写基本信息：姓名、工号、部门、联系方式
+- 选择申请类型：临时授权 / 长期授权
+- 填写访问目标服务器信息（IP、用途）
+- 说明申请原因，如：生产环境运维、项目部署等
+- 系统自动记录提单时间和申请人信息
+
+**2. 部门经理审批（一级审批）**
+- 审批人：申请人的直属部门经理
+- 审批内容：核实申请人身份、确认访问需求的合理性
+- 审批结果：同意或驳回
+- 若驳回，需填写驳回原因，流程结束
+- 若同意，流程自动流转至 IT 安全部门
+
+**3. IT 安全部门审批（二级审批）**
+- 审批人：IT 安全团队负责人
+- 审批内容：评估访问权限、确认安全合规性
+- 审批通过后，由 IT 工程师执行堡垒机账号授权操作
+- 填写处理记录：
+  - 授权账号
+  - 授权有效期
+  - 访问服务器信息
+  - 完成时间
+- 可选择挂载 MCP 工具自动调用堡垒机 API 完成授权
+
+**4. 结单阶段**
+- IT 完成处理后，系统自动发送邮件通知申请人
+- 邮件内容包含：堡垒机账号、有效期、访问指引
+- 工单状态变更为"已完成"
+- 申请人可在工单中查看完整的处理记录
+
+#### SLA 时限
+- 标准响应时间：**8 小时**
+- 从提单到完成的总时长不超过 2 个工作日
+
+#### 异常处理
+- 若申请人信息不完整，系统自动退回补充
+- 若访问服务器信息有误，IT 需与申请人沟通调整
+- 若堡垒机系统故障，IT 可暂停工单并备注原因
+
+#### 知识库关联
+- 《堡垒机使用规范》
+- 《运维安全管理制度》
+- 《堡垒机账号授权流程指引》`,
+  sla_tier: "8h",
+  nodes: [
+    { id: "start", label: "提单", type: "start" },
+    { id: "manager_approval", label: "部门经理审批", type: "approval" },
+    { id: "security_approval", label: "IT安全审批", type: "approval" },
+    { id: "it_processing", label: "IT处理", type: "processing" },
+    { id: "completed", label: "完成", type: "end" }
+  ],
+  fields: [
+    {
+      key: "applicant_name",
+      label: "申请人姓名",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "employee_id",
+      label: "工号",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "department",
+      label: "所属部门",
+      type: "select",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "contact_phone",
+      label: "联系电话",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "apply_type",
+      label: "申请类型",
+      type: "select",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "target_server_ip",
+      label: "目标服务器IP",
+      type: "text",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "target_server_usage",
+      label: "服务器用途",
+      type: "textarea",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "apply_reason",
+      label: "申请原因",
+      type: "textarea",
+      permissions: {
+        "start": "write",
+        "manager_approval": "read",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "manager_approval_comment",
+      label: "经理审批意见",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "write",
+        "security_approval": "read",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "security_approval_comment",
+      label: "IT安全审批意见",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "security_approval": "write",
+        "it_processing": "read",
+        "completed": "read"
+      }
+    },
+    {
+      key: "authorized_account",
+      label: "授权账号",
+      type: "text",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "security_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    },
+    {
+      key: "authorized_period",
+      label: "授权有效期",
+      type: "text",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "security_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    },
+    {
+      key: "processing_notes",
+      label: "处理记录",
+      type: "textarea",
+      permissions: {
+        "start": "hide",
+        "manager_approval": "hide",
+        "security_approval": "hide",
+        "it_processing": "write",
+        "completed": "read"
+      }
+    }
+  ],
+  mock_data: {
+    applicant_name: "李四",
+    employee_id: "E20260002",
+    department: "运维部",
+    contact_phone: "13900139000",
+    apply_type: "临时授权",
+    target_server_ip: "192.168.1.100",
+    target_server_usage: "生产环境运维",
+    apply_reason: "需要临时访问生产服务器进行故障排查"
   }
 }
 
@@ -238,6 +700,26 @@ export function CreateServiceDrawer({ open, onOpenChange, mode = "create", editi
         collaborationRules: editingService.collaborationRules || "",
         enabled: true,
       })
+      
+      // 如果是邮箱创建申请服务，加载预配置的工作流
+      if (editingService.code === "email_account_creation") {
+        setWorkflowConfig(EMAIL_ACCOUNT_CREATION_CONFIG)
+        setFormData(prev => ({
+          ...prev,
+          collaborationRules: EMAIL_ACCOUNT_CREATION_CONFIG.script,
+          sla: EMAIL_ACCOUNT_CREATION_CONFIG.sla_tier.replace('h', '')
+        }))
+      }
+      
+      // 如果是堡垒机资源申请服务，加载预配置的工作流
+      if (editingService.code === "bastion_host_access_request") {
+        setWorkflowConfig(BASTION_HOST_CONFIG)
+        setFormData(prev => ({
+          ...prev,
+          collaborationRules: BASTION_HOST_CONFIG.script,
+          sla: BASTION_HOST_CONFIG.sla_tier.replace('h', '')
+        }))
+      }
       
       if (editingService.uploadedDocument) {
         setKnowledgeLibrary([{
@@ -722,10 +1204,20 @@ export function CreateServiceDrawer({ open, onOpenChange, mode = "create", editi
                   {/* 流程节点编排 */}
                   {workflowConfig && (
                     <section className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-5 rounded-full bg-gradient-to-b from-emerald-500 to-teal-500" />
-                        <h3 className="text-base font-semibold text-gray-900">流程节点</h3>
-                        <span className="text-xs text-gray-400 ml-1">Workflow Nodes</span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-1.5 h-5 rounded-full bg-gradient-to-b from-emerald-500 to-teal-500" />
+                          <h3 className="text-base font-semibold text-gray-900">流程节点</h3>
+                          <span className="text-xs text-gray-400 ml-1">Workflow Nodes</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {/* TODO: 生成流程预览 */}}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 border border-indigo-200 transition-all text-sm font-medium"
+                        >
+                          <Eye className="w-4 h-4" />
+                          生成流程预览
+                        </button>
                       </div>
 
                       {/* 流程轴 Timeline */}
@@ -1117,13 +1609,6 @@ export function CreateServiceDrawer({ open, onOpenChange, mode = "create", editi
               <span>最后保存: 刚刚</span>
             </div>
             <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={handleReset}
-                className="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all"
-              >
-                重置
-              </button>
               <button
                 type="submit"
                 onClick={handleSubmit}

@@ -12,6 +12,7 @@ import {
   Brain,
   Thermometer,
   ChevronRight,
+  Trash2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { AgentEditDrawer } from "./agent-edit-drawer"
@@ -132,6 +133,13 @@ export function AgentManagement() {
     ))
   }
 
+  const handleDelete = (agentId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (confirm("确定要删除这个智能体吗？")) {
+      setAgents(agents.filter(a => a.id !== agentId))
+    }
+  }
+
   return (
     <div className="flex-1 ml-[200px] h-screen flex flex-col bg-gray-50/50">
       {/* Header */}
@@ -184,8 +192,16 @@ export function AgentManagement() {
                 !agent.enabled && "opacity-75"
               )}
             >
-              {/* Status Badge */}
-              <div className="absolute top-4 right-4">
+              {/* Status Badge and Delete Button */}
+              <div className="absolute top-4 right-4 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={(e) => handleDelete(agent.id, e)}
+                  className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
+                  title="删除智能体"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
                 <button
                   type="button"
                   onClick={(e) => handleToggleStatus(agent.id, e)}

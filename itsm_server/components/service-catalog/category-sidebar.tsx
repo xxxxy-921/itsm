@@ -11,10 +11,8 @@ import { cn } from "@/lib/utils"
 
 // Mock categories data - 中文化
 const categoriesData = [
-  { id: "hr", name: "人事服务", code: "hr-services", count: 3, description: "员工相关服务", icon: "", enabled: true },
-  { id: "office", name: "办公支持", code: "office-support", count: 2, description: "日常办公支持", icon: "", enabled: true },
-  { id: "assets", name: "设备与资产", code: "equipment-assets", count: 4, description: "设备资产管理", icon: "", enabled: true },
-  { id: "access", name: "账号与权限管理", code: "account-access", count: 5, description: "账号权限相关", icon: "", enabled: true },
+  { id: "email", name: "邮箱服务", code: "email-services", count: 1, description: "企业邮箱相关服务", icon: "", enabled: true },
+  { id: "server", name: "服务器服务", code: "server-services", count: 1, description: "服务器资源相关服务", icon: "", enabled: true },
 ]
 
 interface CategorySidebarProps {

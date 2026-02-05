@@ -22,6 +22,8 @@ const agents = [
   { id: 3, name: "知识库助手", version: "v2.1", active: false, description: "智能知识检索与文档管理助手，支持多格式文档处理" },
 ]
 
+type FilterType = "all" | "favorite" | "recent"
+
 type Message = {
   id: number
   content: string
