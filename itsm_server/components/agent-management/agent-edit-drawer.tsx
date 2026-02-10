@@ -13,7 +13,7 @@ import {
   ChevronDown,
   Type,
   Settings2,
-  RotateCcw,
+  Trash2,
 } from "lucide-react"
 import {
   Sheet,
@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/sheet"
 import { cn } from "@/lib/utils"
 import { Agent } from "./agent-management"
+import { McpBindingSection, McpBinding } from "./mcp-binding-section"
 
 interface AgentEditDrawerProps {
   open: boolean
@@ -29,6 +30,7 @@ interface AgentEditDrawerProps {
   agent: Agent | null
   isCreating: boolean
   onSave: (agent: Agent) => void
+  onDelete: (agentId: string) => void
 }
 
 // 可选模型列表
@@ -51,6 +53,7 @@ const defaultAgent: Omit<Agent, "id"> = {
   temperature: 0.7,
   skill_selection_model: "gpt-4",
   title_generation_model: "gpt-3.5-turbo",
+  mcpBindings: [],
   createdAt: new Date().toISOString().split("T")[0],
   updatedAt: new Date().toISOString().split("T")[0],
 }
@@ -60,7 +63,8 @@ export function AgentEditDrawer({
   onOpenChange, 
   agent, 
   isCreating, 
-  onSave 
+  onSave,
+  onDelete 
 }: AgentEditDrawerProps) {
   const [formData, setFormData] = useState<Omit<Agent, "id">>({ ...defaultAgent })
   const [modelDropdownOpen, setModelDropdownOpen] = useState(false)
@@ -79,6 +83,7 @@ export function AgentEditDrawer({
         temperature: agent.temperature,
         skill_selection_model: agent.skill_selection_model,
         title_generation_model: agent.title_generation_model,
+        mcpBindings: agent.mcpBindings || [],
         createdAt: agent.createdAt,
         updatedAt: agent.updatedAt,
       })
@@ -96,23 +101,9 @@ export function AgentEditDrawer({
     onSave(savedAgent)
   }
 
-  const handleReset = () => {
-    if (agent) {
-      setFormData({
-        name: agent.name,
-        description: agent.description,
-        version: agent.version,
-        enabled: agent.enabled,
-        prompt: agent.prompt,
-        model: agent.model,
-        temperature: agent.temperature,
-        skill_selection_model: agent.skill_selection_model,
-        title_generation_model: agent.title_generation_model,
-        createdAt: agent.createdAt,
-        updatedAt: agent.updatedAt,
-      })
-    } else {
-      setFormData({ ...defaultAgent })
+  const handleDelete = () => {
+    if (agent?.id) {
+      onDelete(agent.id)
     }
   }
 
@@ -325,19 +316,28 @@ export function AgentEditDrawer({
                 <p className="text-xs text-gray-500">用于自动生成对话标题的模型</p>
               </div>
             </section>
+
+            {/* MCP 服务挂载 */}
+            <McpBindingSection
+              bindings={formData.mcpBindings}
+              onChange={(bindings) => setFormData({ ...formData, mcpBindings: bindings })}
+            />
           </div>
         </div>
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-gray-100 bg-gray-50/50 flex items-center justify-between">
-          <button
-            type="button"
-            onClick={handleReset}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-100 transition-all"
-          >
-            <RotateCcw className="w-4 h-4" />
-            重置
-          </button>
+          {!isCreating && (
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-red-200 text-sm font-medium text-red-600 hover:bg-red-50 transition-all"
+            >
+              <Trash2 className="w-4 h-4" />
+              删除
+            </button>
+          )}
+          {isCreating && <div />}
           <div className="flex items-center gap-3">
             <button
               type="button"

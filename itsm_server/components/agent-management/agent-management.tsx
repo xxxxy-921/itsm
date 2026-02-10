@@ -12,10 +12,10 @@ import {
   Brain,
   Thermometer,
   ChevronRight,
-  Trash2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { AgentEditDrawer } from "./agent-edit-drawer"
+import { McpBinding } from "./mcp-binding-section"
 
 // Agent 数据类型
 export interface Agent {
@@ -29,6 +29,7 @@ export interface Agent {
   temperature: number
   skill_selection_model: string
   title_generation_model: string
+  mcpBindings: McpBinding[]  // MCP 服务绑定
   createdAt: string
   updatedAt: string
 }
@@ -46,6 +47,22 @@ const mockAgents: Agent[] = [
     temperature: 0.7,
     skill_selection_model: "gpt-4",
     title_generation_model: "gpt-3.5-turbo",
+    mcpBindings: [
+      {
+        mcpServiceId: "mcp_database",
+        mcpServiceName: "数据库连接器",
+        mcpServiceUrl: "https://api.example.com/mcp/database",
+        enabledTools: ["query", "insert", "update"],
+        priority: 1,
+      },
+      {
+        mcpServiceId: "mcp_ldap",
+        mcpServiceName: "LDAP 目录服务",
+        mcpServiceUrl: "ldap://ldap.company.com",
+        enabledTools: ["query_user", "search"],
+        priority: 2,
+      },
+    ],
     createdAt: "2026-01-15",
     updatedAt: "2026-02-01",
   },
@@ -60,6 +77,7 @@ const mockAgents: Agent[] = [
     temperature: 0.5,
     skill_selection_model: "gpt-3.5-turbo",
     title_generation_model: "gpt-3.5-turbo",
+    mcpBindings: [],
     createdAt: "2026-01-20",
     updatedAt: "2026-01-28",
   },
@@ -74,6 +92,15 @@ const mockAgents: Agent[] = [
     temperature: 0.3,
     skill_selection_model: "gpt-4",
     title_generation_model: "gpt-3.5-turbo",
+    mcpBindings: [
+      {
+        mcpServiceId: "mcp_file_system",
+        mcpServiceName: "文件系统访问",
+        mcpServiceUrl: "file://local",
+        enabledTools: ["read_file", "list_directory"],
+        priority: 1,
+      },
+    ],
     createdAt: "2026-01-10",
     updatedAt: "2026-01-26",
   },
@@ -88,6 +115,7 @@ const mockAgents: Agent[] = [
     temperature: 0.2,
     skill_selection_model: "gpt-4",
     title_generation_model: "gpt-3.5-turbo",
+    mcpBindings: [],
     createdAt: "2026-01-25",
     updatedAt: "2026-01-30",
   },
@@ -133,10 +161,10 @@ export function AgentManagement() {
     ))
   }
 
-  const handleDelete = (agentId: string, e: React.MouseEvent) => {
-    e.stopPropagation()
-    if (confirm("确定要删除这个智能体吗？")) {
+  const handleDeleteAgent = (agentId: string) => {
+    if (confirm("确定要删除这个智能体吗？此操作无法撤销。")) {
       setAgents(agents.filter(a => a.id !== agentId))
+      setDrawerOpen(false)
     }
   }
 
@@ -192,16 +220,8 @@ export function AgentManagement() {
                 !agent.enabled && "opacity-75"
               )}
             >
-              {/* Status Badge and Delete Button */}
+              {/* Status Badge */}
               <div className="absolute top-4 right-4 flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={(e) => handleDelete(agent.id, e)}
-                  className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all opacity-0 group-hover:opacity-100"
-                  title="删除智能体"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
                 <button
                   type="button"
                   onClick={(e) => handleToggleStatus(agent.id, e)}
@@ -287,6 +307,7 @@ export function AgentManagement() {
         agent={editingAgent}
         isCreating={isCreating}
         onSave={handleSave}
+        onDelete={handleDeleteAgent}
       />
     </div>
   )

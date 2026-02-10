@@ -9,7 +9,6 @@ import {
   PowerOff,
   Settings,
   ExternalLink,
-  Shield,
   Database,
   MessageSquare,
   FileText,
@@ -105,11 +104,6 @@ export function McpManagement() {
     ))
   }
 
-  const stats = {
-    total: mcps.length,
-    enabled: mcps.filter(m => m.enabled).length,
-  }
-
   return (
     <div className="flex-1 ml-[200px] h-screen flex flex-col bg-gray-50/50">
       {/* Header */}
@@ -148,25 +142,6 @@ export function McpManagement() {
           </button>
         </div>
       </header>
-
-      {/* Stats Bar */}
-      <div className="px-8 py-4 border-b border-gray-100 bg-white">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Shield className="w-4 h-4 text-blue-600" />
-            <span>系统级 MCP: <span className="font-semibold text-gray-900">{stats.total}</span></span>
-          </div>
-
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Power className="w-4 h-4 text-green-600" />
-            <span>已启用: <span className="font-semibold text-green-600">{stats.enabled}</span></span>
-          </div>
-
-          <div className="ml-auto text-xs text-gray-500">
-            <span>系统预置的 MCP 连接器，可配置并在服务中使用</span>
-          </div>
-        </div>
-      </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto p-8">
